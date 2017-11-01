@@ -1,5 +1,6 @@
 require('babel-register')
-var config = require('../../config')
+var config = require('../../config');
+var settings = require('../../src/settings.json')
 
 // http://nightwatchjs.org/gettingstarted#settings-file
 module.exports = {
@@ -10,7 +11,7 @@ module.exports = {
   selenium: {
     start_process: true,
     server_path: require('selenium-server').path,
-    host: '127.0.0.1',
+    host: settings.BackURL,
     port: 4444,
     cli_args: {
       'webdriver.chrome.driver': require('chromedriver').path

@@ -15,7 +15,8 @@
 </template>
 
 <script>
-  import { apiUrl } from '../config';
+  //import { apiUrl } from '../config';
+  import settings from '../settings.json';
 
   export default {
     name: 'login',
@@ -46,7 +47,7 @@
       signIn() {
         this.disableAllElemets(true);
 
-        var url = apiUrl + 'signin';
+        var url = settings.BackURL + ':3000/signin';
 
         this.axios.post('/signin', {
           Email: this.Email,
