@@ -72,6 +72,8 @@ var readyPromise = new Promise(resolve => {
   _resolve = resolve
 }).catch(err => {
   console.log(err);
+
+  return;
 })
 
 console.log('> Starting dev server...')
