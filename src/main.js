@@ -16,7 +16,7 @@ import '../public/css/loader.css';
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
 
-axios.defaults.baseURL = 'http://localhost:3000/api/';
+axios.defaults.baseURL = 'http://127.0.0.1:3000/api/';
 
 Vue.config.productionTip = false;
 
@@ -24,7 +24,7 @@ Vue.config.productionTip = false;
 new Vue({
   el: '#app',
   data: {
-    backendUrl: 'http://localhost:3000/'
+    backendUrl: 'http://127.0.0.1:3000/'
   },
   mounted() {},
   router,
