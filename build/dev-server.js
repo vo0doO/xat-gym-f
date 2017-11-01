@@ -70,6 +70,8 @@ var uri = 'http://localhost:' + port
 var _resolve
 var readyPromise = new Promise(resolve => {
   _resolve = resolve
+}).catch(err => {
+  console.log(err);
 })
 
 console.log('> Starting dev server...')

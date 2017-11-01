@@ -26,12 +26,6 @@
       console.log('App.vue');
     },
 
-    computed: {
-      isLogged() {
-        return this.checkSignInStatus();;
-      }
-    },
-
     methods: {
       logOut() {
         window.localStorage.setItem('token', 'null');
