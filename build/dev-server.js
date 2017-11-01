@@ -65,7 +65,7 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
-var settings = require('./settings');
+var settings = require('../src/settings.json');
 var uri = settings.BackURL + ':' + port
 
 var _resolve
