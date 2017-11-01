@@ -27,6 +27,8 @@
 </template>
 
 <script>
+  var main_app = require('../App');
+
   export default {
     name: 'add_new_program',
     data() {
@@ -43,34 +45,10 @@
     },
 
     mounted() {
-      this.checkSignInStatus();
+      //this.checkSignInStatus();
     },
 
     methods: {
-      checkSignInStatus() {
-        var token = window.localStorage.getItem('token');
-
-        if (token == 'null') {
-          this.$router.push('/login');
-        } else {
-          this.axios.post('/checksigninstatus', {
-              Token: token
-            })
-            .then(result => {
-              if (result.data.Status == false) {
-                alert(result.data.Body.Message);
-
-                window.localStorage.setItem('token', 'null');
-
-                this.$router.push('/login');
-              }
-            })
-            .catch(err => {
-              alert(err);
-            });
-        }
-      },
-
       addNewExInput() {
         if (this.exercises.length == 0) {
           this.exercises.push({
@@ -111,33 +89,31 @@
         this.disableElements(true);
 
         var token = window.localStorage.getItem('token');
-        console.log('xxx');
 
-        if (token == 'null') {
-          this.$router.push('/login');
-        } else {
-          this.axios.post('/addProgram', {
-              Program_name: this.program_name,
-              Exercises: this.exercises,
-              Token: token
-            })
-            .then(response => {
-              if (response.data.Status == false) {
-                alert(response.data.Body.Msg);
+        this.axios.post('/addProgram', {
+          Program_name: this.program_name,
+          Exercises: this.exercises,
+          Token: token
+        })
+        .then(response => {
+          if (response.data.Status == false) {
+            alert(response.data.Body.Msg);
 
-                this.disableElements(false);
+            this.disableElements(false);
 
-                return;
-              } else {
+            return;
+          } else {
 
-                this.disableElements(false);
-              }
-            }).catch(err => {
-              alert(err);
-
-              this.disableElements(false);
+            this.$router.push({
+              name: 'my_programs'
             });
-        }
+            this.disableElements(false);
+          }
+        }).catch(err => {
+          alert(err);
+
+          this.disableElements(false);
+        });
       },
 
       disableElements(status) {

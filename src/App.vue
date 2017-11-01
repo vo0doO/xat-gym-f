@@ -12,66 +12,76 @@
 </template>
 
 <script>
-export default {
-  name: 'app',
+  export default {
+    name: 'app',
 
-  data() {
-    return {
-      isLogin: false
-    }
-  },
-
-  mounted() {
-    this.checkSignInStatus();
-  },
-
-  methods: {
-    logOut() {
-      window.localStorage.setItem('token', 'null');
-      this.isLogin = false;
-
-      this.$router.push('/login');
+    data() {
+      return {
+        isLogin: false
+      }
     },
 
-    checkSignInStatus() {
-      var token = window.localStorage.getItem('token');
-      console.log('Main page token: ' + token);
+    mounted() {
+      this.checkSignInStatus();
+      console.log('App.vue');
+    },
 
-      if (token == 'null') {
+    computed: {
+      isLogged() {
+        return this.checkSignInStatus();;
+      }
+    },
+
+    methods: {
+      logOut() {
+        window.localStorage.setItem('token', 'null');
+        this.isLogin = false;
+
         this.$router.push('/login');
-      } else {
-        this.axios.post('/checksigninstatus', {
-          Token: token
-        })
-        .then(result => {
-          if (result.data.Status == false) {
-            alert('Error1: ' + result.data.Body.Message);
+      },
 
-            window.localStorage.setItem('token', 'null');
 
-            this.$router.push('/login');
-          } else {
-            this.isLogin = true;
+      checkSignInStatus() {
+        var token = window.localStorage.getItem('token');
+        console.log('Main page token: ' + token);
 
-            console.log('Is login: ' + this.isLogin);
-          }
-        })
-        .catch(err => {
-          alert('Error2: ' + err);
-        });
+        if (token == 'null') {
+          this.$router.push('/login');
+        } else {
+          this.axios.post('/checksigninstatus', {
+              Token: token
+            })
+            .then(result => {
+              if (result.data.Status == false) {
+                alert('Error1: ' + result.data.Body.Message);
+
+                window.localStorage.setItem('token', 'null');
+
+                this.$router.push('/login');
+              } else {
+                this.isLogin = true;
+
+                console.log('Is login: ' + this.isLogin);
+              }
+            })
+            .catch(err => {
+              alert('Error2: ' + err);
+            });
+        }
       }
     }
   }
-}
+
 </script>
 
 <style>
-#top {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  #top {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+  }
+
 </style>

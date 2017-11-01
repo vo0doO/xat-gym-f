@@ -11,6 +11,8 @@ import VueAxios from 'vue-axios';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
+import '../public/css/loader.css';
+
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
 
@@ -24,7 +26,10 @@ new Vue({
   data: {
     backendUrl: 'http://localhost:3000/'
   },
+  mounted() {},
   router,
   template: '<App/>',
-  components: { App }
+  components: {
+    App
+  }
 });

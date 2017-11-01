@@ -38,24 +38,8 @@
       checkSignInStatus() {
         var token = window.localStorage.getItem('token');
 
-        if (token != 'null') {
-          this.axios.post('/checksigninstatus', {
-            Token: token
-          })
-            .then(result => {
-              if (result.data.Status == false) {
-                alert(result.data.Body.Message);
-
-                window.localStorage.setItem('token', 'null');
-
-                console.log('Not login');
-              } else {
-                this.$router.push('/');
-              }
-            })
-            .catch(err => {
-              alert(err);
-            });
+        if (token == 'null') {
+          this.$parent.isLogin = false;
         }
       },
 

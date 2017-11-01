@@ -1,6 +1,27 @@
 <template>
   <div id="my-programs">
-    <h1>TEST</h1>
+    <h1>My programs</h1>
+    <table class="table">
+      <thead>
+      </thead>
+      <tbody>
+        <tr v-for="program in my_programs">
+          <td>
+            <a :href="program.Url" class="list-group-item">{{ program.Name }}</a>
+          </td>
+          <td>
+            <a v-if="delete_link_status" @click="deleteProgram($event, program._id)" href="#">x</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div v-if="animation_status" class="row">
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+        <div class="loader"></div>
+      </div>
+      <div class="col-md-4"></div>
+    </div>
   </div>
 </template>
 
@@ -10,56 +31,40 @@
 
     data() {
       return {
-        isLogin: null
+        login: '',
+        my_programs: [],
+        delete_link_status: true,
+        animation_status: true
       }
     },
 
-    mounted() {
-      this.checkSignInStatus();
-      console.log('start');
-      console.log('Is login: ' + this.isLogin);
-
-      this.getAllPrograms();
-      console.log('end');
+    async mounted() {
+      await this.getAllPrograms();
     },
 
     methods: {
-      logOut() {
-        window.localStorage.setItem('token', 'null');
-        this.isLogin = false;
+      deleteProgram(event, id) {
+        if (event) event.preventDefault()
 
-        this.$router.push('/login');
-      },
+        this.delete_link_status = false;
 
-      checkSignInStatus() {
-        var token = window.localStorage.getItem('token');
+        this.axios.post('/deleteProgram', {
+            Id: id
+          })
+          .then(async result => {
+            this.delete_link_status = true;
 
-        if (token == 'null') {
-          this.$router.push('/login');
-        } else {
-          this.axios.post('/checksigninstatus', {
-              Token: token
-            })
-            .then(result => {
-              if (result.data.Status == false) {
-                alert('Error1: ' + result.data.Body.Message);
+            await this.getAllPrograms();
+          })
+          .catch(err => {
+            this.delete_link_status = true;
 
-                window.localStorage.setItem('token', 'null');
-
-                this.$router.push('/login');
-              } else {
-                this.isLogin = true;
-              }
-            })
-            .catch(err => {
-              alert('Error2: ' + err);
-            });
-        }
+            console.log(err);
+          })
       },
 
       getAllPrograms() {
-        console.log('yyyyyyyyyyyyyyyyyyyyy');
-        if (this.isLogin == true) {
+        return new Promise(done => {
           var token = window.localStorage.getItem('token');
 
           this.axios.post('/myPrograms', {
@@ -75,22 +80,35 @@
                   window.localStorage.setItem('token', 'null');
 
                   this.$router.push('/login');
+
+                  return done();
                 } else {
                   alert(result.data.Body.Msg);
+
+                  return done();
                 }
               } else {
                 this.isLogin = true;
 
+                for (var i = 0; i < result.data.Body.Programs.length; i++) {
+                  result.data.Body.Programs[i].Url = '?#/program/' + result.data.Body.Programs[i]._id;
+                }
+
                 console.log(result.data.Body.Programs);
+
+                this.my_programs = result.data.Body.Programs;
+
+                this.animation_status = false;
+
+                return done();
               }
             })
             .catch(err => {
               alert('Error3: ' + err);
+
+              return done();
             });
-        } else {
-          alert('fuck uou');
-          this.$router.push('/');
-        }
+        })
       }
     }
   }
