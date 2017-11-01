@@ -15,13 +15,6 @@
         </tr>
       </tbody>
     </table>
-    <div v-if="animation_status" class="row">
-      <div class="col-md-4"></div>
-      <div class="col-md-4">
-        <div class="loader"></div>
-      </div>
-      <div class="col-md-4"></div>
-    </div>
   </div>
 </template>
 
@@ -33,12 +26,12 @@
       return {
         login: '',
         my_programs: [],
-        delete_link_status: true,
-        animation_status: true
+        delete_link_status: true
       }
     },
 
     async mounted() {
+      this.$parent.animation_status = true;
       await this.getAllPrograms();
     },
 
@@ -72,21 +65,11 @@
             })
             .then(result => {
               if (result.data.Status == false) {
-                if (result.data.Login == false) {
-                  this.isLogin = false;
+                alert(result.data.Body.Msg);
+                
+                this.isLogin = true;
 
-                  alert('Error1: ' + result.data.Body.Message);
-
-                  window.localStorage.setItem('token', 'null');
-
-                  this.$router.push('/login');
-
-                  return done();
-                } else {
-                  alert(result.data.Body.Msg);
-
-                  return done();
-                }
+                return done();
               } else {
                 this.isLogin = true;
 
@@ -94,11 +77,9 @@
                   result.data.Body.Programs[i].Url = '?#/program/' + result.data.Body.Programs[i]._id;
                 }
 
-                console.log(result.data.Body.Programs);
-
                 this.my_programs = result.data.Body.Programs;
 
-                this.animation_status = false;
+                this.$parent.animation_status = false;
 
                 return done();
               }
@@ -109,7 +90,7 @@
               return done();
             });
         })
-      }
+      },
     }
   }
 

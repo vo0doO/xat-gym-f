@@ -14,7 +14,7 @@ function checkSignInStatus() {
         })
         .then(result => {
           if (result.data.Status == false) {
-            alert('Error1 beforeEach: ' + result.data.Body.Message);
+            alert('Your session ended');
 
             window.localStorage.setItem('token', 'null');
 

@@ -122,6 +122,8 @@
         this.inp_add_new_exercise = status;
         this.inp_delete_exercise = status;
         this.inp_save_button = status;
+
+        this.$parent.animation_status = status;
       }
     }
   }

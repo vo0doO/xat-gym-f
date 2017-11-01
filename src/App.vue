@@ -2,12 +2,20 @@
   <div id="app">
     <div id="top">
       <h1 v-if="isLogin">xat-gym</h1>
+      <h1 v-else>Please sign in</h1>
       <router-link v-if="isLogin" id="to-home" to="/">Home</router-link>
       <a href="#" v-if="isLogin" @click="logOut">Log out</a>
       <router-link v-if="isLogin" id="to-add-new-program" to="/addNewProgram">Add new program</router-link>
       <router-link v-if="isLogin" id="to-my-programs" to="/myPrograms">My Programs</router-link>
     </div>
     <router-view></router-view>
+    <div v-if="animation_status" class="row">
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+        <div class="loader"></div>
+      </div>
+      <div class="col-md-4"></div>
+    </div>
   </div>
 </template>
 
@@ -17,7 +25,9 @@
 
     data() {
       return {
-        isLogin: false
+        isLogin: false,
+        animation_status: false,
+        userEmail: ''
       }
     },
 
@@ -37,7 +47,6 @@
 
       checkSignInStatus() {
         var token = window.localStorage.getItem('token');
-        console.log('Main page token: ' + token);
 
         if (token == 'null') {
           this.$router.push('/login');
@@ -47,7 +56,7 @@
             })
             .then(result => {
               if (result.data.Status == false) {
-                alert('Error1: ' + result.data.Body.Message);
+                alert('Your session ended');
 
                 window.localStorage.setItem('token', 'null');
 
@@ -61,6 +70,14 @@
             .catch(err => {
               alert('Error2: ' + err);
             });
+        }
+      },
+
+      checkSignInStatusServer(serverResponse) {
+        if (serverResponse.Login == false) {
+          this.$router.push('/login');
+
+          return;
         }
       }
     }

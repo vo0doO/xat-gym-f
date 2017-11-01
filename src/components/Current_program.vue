@@ -9,16 +9,26 @@
     name: 'current_program',
     data() {
       return {
-        current_program: 'xxx'
+        current_program: ''
       }
     },
 
     mounted() {
-        this.current_program = this.$route.params.id;
+      this.openProgram(this.$route.params.id);
     },
 
     methods: {
-
+      openProgram(id) {
+        this.axios.post('/program', {
+            ID: id
+          })
+          .then(result => {
+            console.log(result);
+          })
+          .catch(err => {
+            alert(err);
+          })
+      }
     }
   }
 
