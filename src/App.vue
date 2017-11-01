@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="top">
-      <h1>xat-gym</h1>
+      <h1 v-if="isLogin">xat-gym</h1>
       <router-link v-if="isLogin" id="to-home" to="/">Home</router-link>
       <a href="#" v-if="isLogin" @click="logOut">Log out</a>
       <router-link v-if="isLogin" id="to-add-new-program" to="/addNewProgram">Add new program</router-link>
