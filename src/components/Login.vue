@@ -84,7 +84,7 @@
 
 <style>
   #login {
-    margin-left: 15%;
-    margin-right: 15%
+    margin-left: 5%;
+    margin-right: 5%
   }
 </style>

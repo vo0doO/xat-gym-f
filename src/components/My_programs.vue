@@ -7,10 +7,10 @@
       <tbody>
         <tr v-for="program in my_programs">
           <td>
-            <a :href="program.Url" class="list-group-item">{{ program.Name }}</a>
+            <a :href="program.SiteUrl" class="list-group-item">{{ program.Name }}</a>
           </td>
           <td>
-            <a v-if="delete_link_status" @click="deleteProgram($event, program._id)" href="#">x</a>
+            <a v-if="delete_link_status" @click="deleteProgram($event, program.Url)" href="#">x</a>
           </td>
         </tr>
       </tbody>
@@ -74,7 +74,7 @@
                 this.isLogin = true;
 
                 for (var i = 0; i < result.data.Body.Programs.length; i++) {
-                  result.data.Body.Programs[i].Url = '?#/program/' + result.data.Body.Programs[i]._id;
+                  result.data.Body.Programs[i].SiteUrl = '?#/program/' + result.data.Body.Programs[i].Url;
                 }
 
                 this.my_programs = result.data.Body.Programs;
