@@ -6,7 +6,8 @@
       <router-link v-if="isLogin" id="to-home" to="/">Home</router-link>
       <a href="#" v-if="isLogin" @click="logOut">Log out</a>
       <router-link v-if="isLogin" id="to-add-new-program" to="/addNewProgram">Add new program</router-link>
-      <router-link v-if="isLogin" id="to-my-programs" to="/myPrograms">My Programs</router-link>
+      <router-link v-if="isLogin" id="to-add-my-programs" to="/myPrograms">My programs</router-link>
+      <router-link v-if="isLogin" id="to-my-trainings" to="/myTrainings">My trainings</router-link>
     </div>
     <router-view></router-view>
     <div v-if="animation_status" class="row">

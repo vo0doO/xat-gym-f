@@ -37,7 +37,7 @@
 
     methods: {
       deleteProgram(event, id) {
-        if (event) event.preventDefault()
+        if (event) event.preventDefault();
 
         this.delete_link_status = false;
 

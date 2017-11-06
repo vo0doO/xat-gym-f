@@ -8,6 +8,9 @@ import Add_new_program from '@/components/Add_new_program'
 import My_programs from '@/components/My_programs'
 import Delete_program from '@/components/Delete_program'
 import Current_program from '@/components/Current_program'
+import Start_training from '@/components/Start_training'
+import Training from '@/components/Training'
+import My_trainings from '@/components/My_trainings'
 
 Vue.use(Router)
 
@@ -37,6 +40,21 @@ const router = new Router({
       path: '/program/:id',
       name: 'Current_program',
       component: Current_program
+    },
+    {
+      path: '/startTraining',
+      name: 'Start_training',
+      component: Start_training
+    },
+    {
+      path: '/training/:id',
+      name: 'training',
+      component: Training
+    },
+    {
+      path: '/myTrainings',
+      name: 'my_trainings',
+      component: My_trainings
     }
   ]
 })

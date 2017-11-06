@@ -2,8 +2,8 @@
   <div id="current-program">
     <h1>{{ program_name }}</h1>
     <h3>Add new exercise</h3>
-    <input v-model="new_ex" type="text">
-    <button @click="addNewEx()">Add</button>
+    <input v-if="input_status" v-model="new_ex" type="text">
+    <button v-if="input_status" @click="addNewEx()">Add</button>
     <table class="table">
       <thead>
       </thead>
@@ -13,12 +13,12 @@
             {{ ex.name }}
           </td>
           <td>
-            <a v-if="delete_ex_status" @click="deleteEx($event, ex.id)" href="#">x</a>
+            <a v-if="input_status" @click="deleteEx($event, ex.id)" href="#">x</a>
           </td>
         </tr>
       </tbody>
     </table>
-    <button @click="updateProgram()">Save</button>
+    <button v-if="input_status" @click="updateProgram()">Save</button>
   </div>
 </template>
 
@@ -31,6 +31,7 @@
         program_url: '',
         exercises: [],
         new_ex: '',
+        input_status: false,
 
         delete_ex_status: true
       }
@@ -68,6 +69,8 @@
               this.program_url = result.data.Body.Program.Url;
               this.exercises = result.data.Body.Program.Exercises;
 
+              this.input_status = true;
+
               return done();
             }
           })
@@ -94,6 +97,7 @@
 
           var token = window.localStorage.getItem('token');
           this.$parent.animation_status = true;
+          this.input_status = false;
 
           if (token == '' || token == 'null') {
             this.$parent.animation_status = false;
@@ -108,11 +112,13 @@
             Exs: this.exercises
           }).then(result => {
             this.$parent.animation_status = false;
+            this.input_status = true;
 
             return done();
           }).catch(err => {
             alert(err);
             this.$parent.animation_status = false;
+            this.input_status = true;
 
             return done();
           })

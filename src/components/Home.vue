@@ -1,6 +1,9 @@
 <template>
   <div id="home">
     <h1>Hello</h1>
+    <div id="start-training">
+      <button @click="start_training()">Start training!</button>
+    </div>
   </div>
 </template>
 
@@ -37,9 +40,13 @@
               }
             })
             .catch(err => {
-              alert(err);
+              this.$router.push('/login');
             });
         }
+      },
+
+      start_training() {
+        this.$router.push('/startTraining');
       }
     }
   }

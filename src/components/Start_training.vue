@@ -1,0 +1,112 @@
+<template>
+  <div id="training">
+    <h3>Choose program</h3>
+    <select v-if="select_program_in_status" v-model="selected_program">
+      <option disabled value="">Please select program</option>
+      <option v-for="program in programs" :value="program">{{ program.Name }}</option>
+    </select>
+    <button @click="startTraining()">Start!</button>
+    <div v-if="select_ex_status" id="select-ex">
+      <h1>123</h1>
+    </div>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: 'start_training',
+    data() {
+      return {
+        isLogin: false,
+        login: '',
+        programs: [],
+        current_training: [],
+        selected_program: '',
+
+        select_program_in_status: false,
+        select_ex_status: false
+      }
+    },
+
+    async mounted() {
+      this.$parent.animation_status = true;
+      await this.getAllPrograms();
+    },
+
+    methods: {
+      getAllPrograms() {
+        return new Promise(done => {
+          var token = window.localStorage.getItem('token');
+
+          this.axios.post('/myPrograms', {
+              Token: token
+            })
+            .then(result => {
+              if (result.data.Status == false) {
+                alert(result.data.Body.Msg);
+
+                this.isLogin = true;
+
+                return done();
+              } else {
+                this.isLogin = true;
+                this.login = result.data.Body.Login;
+                this.programs = result.data.Body.Programs;
+                this.select_program_in_status = true;
+
+                this.$parent.animation_status = false;
+
+                return done();
+              }
+            })
+            .catch(err => {
+              alert('Error3: ' + err);
+
+              return done();
+            });
+        })
+      },
+
+      startTraining() {
+        if (this.selected_program == '') {
+          alert('Please choose program');
+
+          return;
+        }
+
+        var token = window.localStorage.getItem('token');
+
+        this.axios.post('/addTraining', {
+            Token: token,
+            Training: this.selected_program,
+          })
+          .then(result => {
+            if (result.data.Status == false) {
+              alert(result.data.Body.Msg);
+
+              this.isLogin = false;
+            } else {
+              this.$router.push('/training/' + result.data.Body.TrainingID);
+              //console.log('Data1: ' + JSON.stringify(result.data));
+            }
+          })
+          .catch(err => {
+            alert('Error3: ' + err);
+          });
+      }
+    }
+  }
+
+</script>
+
+<style>
+  #home {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+  }
+
+</style>

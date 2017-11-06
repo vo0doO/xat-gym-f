@@ -32,6 +32,7 @@
     },
 
     mounted() {
+      this.$parent.animation_status = false;
       this.checkSignInStatus();
     },
 
