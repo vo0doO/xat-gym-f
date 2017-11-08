@@ -2,32 +2,39 @@
   <div id="app">
     <div id="wrapper" v-bind:class="toggledMenu">
 
-      <!-- Sidebar -->
-      <div id="sidebar-wrapper">
-        <ul class="sidebar-nav">
-          <li class="sidebar-brand">
-            <a href="#">
-              Menu
-            </a>
-          </li>
-          <li>
-            <router-link v-if="isLogin" id="to-home" to="/">Home</router-link>
-          </li>
-          <li>
-            <a href="#" v-if="isLogin" @click="logOut">Log out</a>
-          </li>
-          <li>
-            <router-link v-if="isLogin" id="to-add-new-program" to="/addNewProgram">Add new program</router-link>
-          </li>
-          <li>
-            <router-link v-if="isLogin" id="to-add-my-programs" to="/myPrograms">My programs</router-link>
-          </li>
-          <li>
-            <router-link v-if="isLogin" id="to-my-trainings" to="/myTrainings">My trainings</router-link>
-          </li>
-        </ul>
-      </div>
-      <!-- /#sidebar-wrapper -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="#">xat-gym</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">Home
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                  <router-link v-if="isLogin" class="nav-link" id="to-home" to="/">Home</router-link>
+              </li>
+              <li class="nav-item">
+                  <a href="#" v-if="isLogin" @click="logOut" class="nav-link">Log out</a>
+              </li>
+              <li class="nav-item">
+                  <router-link v-if="isLogin" class="nav-link" id="to-add-new-program" to="/addNewProgram">Add new program</router-link>
+              </li>
+              <li class="nav-item">
+                  <router-link v-if="isLogin" class="nav-link" id="to-add-my-programs" to="/myPrograms">My programs</router-link>
+              </li>
+              <li class="nav-item">
+                  <router-link v-if="isLogin" class="nav-link" id="to-my-trainings" to="/myTrainings">My trainings</router-link>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
 
       <!-- Page Content -->
       <div class="container">
@@ -35,7 +42,7 @@
           <div class="col-lg-12 text-center">
             <h1 v-if="isLogin">xat-gym</h1>
             <h1 v-else>Please sign in</h1>
-            <a v-if="isLogin" href="#" id="menu-toggle" @click="openMenu($event)">Toggle Menu</a>
+
             <router-view></router-view>
             <div v-if="animation_status" class="row">
               <div class="col-md-4"></div>
@@ -47,8 +54,6 @@
           </div>
         </div>
       </div>
-      <!-- /#page-content-wrapper -->
-
     </div>
   </div>
 </template>
