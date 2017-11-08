@@ -1,21 +1,53 @@
 <template>
   <div id="app">
-    <div id="top">
-      <h1 v-if="isLogin">xat-gym</h1>
-      <h1 v-else>Please sign in</h1>
-      <router-link v-if="isLogin" id="to-home" to="/">Home</router-link>
-      <a href="#" v-if="isLogin" @click="logOut">Log out</a>
-      <router-link v-if="isLogin" id="to-add-new-program" to="/addNewProgram">Add new program</router-link>
-      <router-link v-if="isLogin" id="to-add-my-programs" to="/myPrograms">My programs</router-link>
-      <router-link v-if="isLogin" id="to-my-trainings" to="/myTrainings">My trainings</router-link>
-    </div>
-    <router-view></router-view>
-    <div v-if="animation_status" class="row">
-      <div class="col-md-4"></div>
-      <div class="col-md-4">
-        <div class="loader"></div>
+    <div id="wrapper" v-bind:class="toggledMenu">
+
+      <!-- Sidebar -->
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="#">
+              Menu
+            </a>
+          </li>
+          <li>
+            <router-link v-if="isLogin" id="to-home" to="/">Home</router-link>
+          </li>
+          <li>
+            <a href="#" v-if="isLogin" @click="logOut">Log out</a>
+          </li>
+          <li>
+            <router-link v-if="isLogin" id="to-add-new-program" to="/addNewProgram">Add new program</router-link>
+          </li>
+          <li>
+            <router-link v-if="isLogin" id="to-add-my-programs" to="/myPrograms">My programs</router-link>
+          </li>
+          <li>
+            <router-link v-if="isLogin" id="to-my-trainings" to="/myTrainings">My trainings</router-link>
+          </li>
+        </ul>
       </div>
-      <div class="col-md-4"></div>
+      <!-- /#sidebar-wrapper -->
+
+      <!-- Page Content -->
+      <div id="page-content-wrapper">
+        <div class="container-fluid">
+          <h1 v-if="isLogin">xat-gym</h1>
+          <h1 v-else>Please sign in</h1>
+          <a v-if="isLogin" href="#" id="menu-toggle" @click="openMenu($event)">Toggle Menu</a>
+
+          <router-view></router-view>
+          <div v-if="animation_status" class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+              <div class="loader"></div>
+            </div>
+            <div class="col-md-4"></div>
+          </div>
+        </div>
+      </div>
+      <!-- /#page-content-wrapper -->
+
     </div>
   </div>
 </template>
@@ -28,7 +60,9 @@
       return {
         isLogin: false,
         animation_status: false,
-        userEmail: ''
+        userEmail: '',
+
+        toggledMenu: ''
       }
     },
 
@@ -41,6 +75,7 @@
       logOut() {
         window.localStorage.setItem('token', 'null');
         this.isLogin = false;
+        this.toggledMenu = '';
 
         this.$router.push('/login');
       },
@@ -80,6 +115,16 @@
 
           return;
         }
+      },
+
+      openMenu(event) {
+        if (event) event.preventDefault();
+
+        if (this.toggledMenu == '') {
+          this.toggledMenu = 'toggled';
+        } else {
+          this.toggledMenu = '';
+        }
       }
     }
   }
@@ -87,5 +132,6 @@
 </script>
 
 <style>
+
 
 </style>
