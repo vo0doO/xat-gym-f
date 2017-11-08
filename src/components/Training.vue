@@ -30,8 +30,8 @@
         </span>
         <div id="add-repeat">
           <span>
-            <input :disabled="form_elements_disabled" v-model="times" class="times-input" type="text" size="2"> /
-            <input :disabled="form_elements_disabled" v-model="weight" class="weight-input" type="text" size="2">
+            <input :disabled="form_elements_disabled" v-model="times" class="times-input" type="number" size="2"> /
+            <input :disabled="form_elements_disabled" v-model="weight" class="weight-input" type="number" size="2">
 
             <button @click="saveTraining()" :disabled="form_elements_disabled" id="save-butt">Save</button>
           </span>
