@@ -8,11 +8,16 @@ import BootstrapVue from 'bootstrap-vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
+//import 'bootstrap/dist/css/bootstrap.css';
+//import 'bootstrap-vue/dist/bootstrap-vue.css';
+
+import '../public/css/bootstrap.min.css';
 
 import '../public/css/loader.css';
 import '../public/css/sidebar.css';
+
+//import '../public/js/jquery-3.2.1.slim.min';
+//import '../public/js/bootstrap.min.js';
 
 import settings from './settings.json';
 
