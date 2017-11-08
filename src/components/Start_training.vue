@@ -1,11 +1,11 @@
 <template>
   <div id="training">
     <h3>Choose program</h3>
-    <select v-if="select_program_in_status" v-model="selected_program">
+    <select v-if="select_program_in_status" v-model="selected_program" class="form-control">
       <option disabled value="">Please select program</option>
       <option v-for="program in programs" :value="program">{{ program.Name }}</option>
     </select>
-    <button @click="startTraining()" v-if="button_start_status">Start!</button>
+    <button @click="startTraining()" v-if="button_start_status" class="btn btn-lg">Start!</button>
     <div v-if="select_ex_status" id="select-ex">
       <h1>123</h1>
     </div>

@@ -2,7 +2,7 @@
   <div id="home">
     <h1>Hello</h1>
     <div id="start-training">
-      <button @click="start_training()" :disabled="start_but_status">Start training!</button>
+      <button @click="start_training()" :disabled="start_but_status" class="btn btn-lg btn-block">Start training!</button>
     </div>
   </div>
 </template>

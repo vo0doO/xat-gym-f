@@ -7,19 +7,19 @@
         <div class="col-sm-10">
           <input :disabled="inp_program_name" v-model="program_name" type="text" class="form-control" id="Name">
         </div>
-        <button :disabled="inp_add_new_exercise" class="new-ex" @click="addNewExInput()">+</button>
+        <button :disabled="inp_add_new_exercise" class="new-ex btn-lg" @click="addNewExInput()" >+</button>
         <div v-for="e in exercises">
           <div class="add-new-ex">
             <input :disabled="inp_exercises_names" v-model="e.name" type="text">
             <span>
-              <button :disabled="inp_delete_exercise" @click="deleteExInput(e)" class="delete-ex-input">-</button>
+              <button :disabled="inp_delete_exercise" @click="deleteExInput(e)" class="delete-ex-input btn-lg">-</button>
             </span>
           </div>
         </div>
       </div>
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-          <button :disabled="inp_save_button" @click="saveEx()" type="submit" class="btn btn-default">Save</button>
+          <button :disabled="inp_save_button" @click="saveEx()" type="submit" class="btn btn-lg btn-block">Save</button>
         </div>
       </div>
     </form>

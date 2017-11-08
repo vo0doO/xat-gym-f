@@ -3,7 +3,7 @@
     <h1>{{ program_name }}</h1>
     <h3>Add new exercise</h3>
     <input v-if="input_status" v-model="new_ex" type="text">
-    <button v-if="input_status" @click="addNewEx()">Add</button>
+    <button v-if="input_status" @click="addNewEx()" class="btn btn-lg">Add</button>
     <table class="table">
       <thead>
       </thead>
@@ -18,7 +18,7 @@
         </tr>
       </tbody>
     </table>
-    <button v-if="input_status" @click="updateProgram()">Save</button>
+    <button v-if="input_status" @click="updateProgram()" class="btn btn-lg btn-block">Save</button>
   </div>
 </template>
 

@@ -15,7 +15,7 @@
       </table>
     </div>
     <div v-if="current_exercice_display" id="current_ex">
-      <button @click="showAllEx()" v-if="show_all_ex_butt" :disabled="form_elements_disabled">Back to all exercises</button>
+      <button @click="showAllEx()" v-if="show_all_ex_butt" :disabled="form_elements_disabled" class="btn btn-lg btn-block">Back to all exercises</button>
       <h3>{{ current_exercice.name }}</h3>
       <div>
         <h4>
@@ -24,8 +24,8 @@
         <span v-for="(rep, index) in current_exercice.Repeats">
           <span class="repeats">
             {{ index + 1 }}
-            <input :disabled="form_elements_disabled" type="text" size="2" :value="rep.Times" class="times-input"> /
-            <input :disabled="form_elements_disabled" type="text" size="2" :value="rep.Weight" class="weight-input">
+            <input :disabled="form_elements_disabled" type="text" :value="rep.Times" class="times-input"> /
+            <input :disabled="form_elements_disabled" type="text" :value="rep.Weight" class="weight-input">
           </span>
         </span>
         <div id="add-repeat">
@@ -33,7 +33,7 @@
             <input :disabled="form_elements_disabled" v-model="times" class="times-input" type="number" size="2"> /
             <input :disabled="form_elements_disabled" v-model="weight" class="weight-input" type="number" size="2">
 
-            <button @click="saveTraining()" :disabled="form_elements_disabled" id="save-butt">Save</button>
+            <button @click="saveTraining()" :disabled="form_elements_disabled" id="save-butt" class="btn btn-lg">Save</button>
           </span>
         </div>
       </div>
@@ -162,10 +162,12 @@
   }
 
   .times-input {
+    width: 50px;
     background-color: #90EE90
   }
 
   .weight-input {
+    width: 50px;
     background-color: #ADD8E6
   }
 
