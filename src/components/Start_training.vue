@@ -5,7 +5,7 @@
       <option disabled value="">Please select program</option>
       <option v-for="program in programs" :value="program">{{ program.Name }}</option>
     </select>
-    <button @click="startTraining()">Start!</button>
+    <button @click="startTraining()" v-if="button_start_status">Start!</button>
     <div v-if="select_ex_status" id="select-ex">
       <h1>123</h1>
     </div>
@@ -24,7 +24,8 @@
         selected_program: '',
 
         select_program_in_status: false,
-        select_ex_status: false
+        select_ex_status: false,
+        button_start_status: false
       }
     },
 
@@ -55,6 +56,7 @@
                 this.select_program_in_status = true;
 
                 this.$parent.animation_status = false;
+                this.button_start_status = true;
 
                 return done();
               }
@@ -73,8 +75,16 @@
 
           return;
         }
+        this.button_start_status = false;
 
         var token = window.localStorage.getItem('token');
+
+        //add false status to each exercise
+
+        for (var i = 0; i < this.selected_program.Exercises.length; i++) {
+          this.selected_program.Exercises[i].StartStatus = false;
+          this.selected_program.Exercises[i].Repeats = [];
+        }
 
         this.axios.post('/addTraining', {
             Token: token,
@@ -85,13 +95,15 @@
               alert(result.data.Body.Msg);
 
               this.isLogin = false;
+              this.button_start_status = true;
             } else {
               this.$router.push('/training/' + result.data.Body.TrainingID);
-              //console.log('Data1: ' + JSON.stringify(result.data));
             }
           })
           .catch(err => {
             alert('Error3: ' + err);
+
+            this.button_start_status = true;
           });
       }
     }

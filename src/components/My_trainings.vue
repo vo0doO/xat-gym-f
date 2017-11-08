@@ -11,6 +11,9 @@
               <a :href="tr.SiteURL" class="list-group-item">{{ tr.ProgramName }}</a>
             </td>
             <td>
+              {{ tr.StartStatus }}
+            </td>
+            <td>
               <a @click="deleteTraining($event, tr.URL)" :href="tr.SiteURL">x</a>
             </td>
           </tr>
@@ -44,10 +47,12 @@
             this.$parent.animation_status = false;
 
             for (var i = 0; i < result.data.Body.Result.length; i++) {
-                result.data.Body.Result[i].SiteURL = '?#/' + 'training/' + result.data.Body.Result[i].URL
+              result.data.Body.Result[i].SiteURL = '?#/' + 'training/' + result.data.Body.Result[i].URL
             }
 
             this.trainings = result.data.Body.Result;
+
+            //console.log('xxx: ' + JSON.stringify(this.trainings));
           })
           .catch(err => {
             this.$parent.animation_status = false;

@@ -2,7 +2,7 @@
   <div id="home">
     <h1>Hello</h1>
     <div id="start-training">
-      <button @click="start_training()">Start training!</button>
+      <button @click="start_training()" :disabled="start_but_status">Start training!</button>
     </div>
   </div>
 </template>
@@ -12,7 +12,9 @@
     name: 'home',
     data() {
       return {
-        msg: 'Welcome home'
+        msg: 'Welcome home',
+
+        start_but_status: false
       }
     },
 
