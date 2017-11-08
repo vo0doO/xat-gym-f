@@ -97,15 +97,6 @@
 </script>
 
 <style>
-  #my-programs {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-  }
-
   #add_new_program {
     margin-left: 15%;
     margin-right: 15%
