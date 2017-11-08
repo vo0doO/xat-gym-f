@@ -30,19 +30,20 @@
       <!-- /#sidebar-wrapper -->
 
       <!-- Page Content -->
-      <div id="page-content-wrapper">
-        <div class="container-fluid">
-          <h1 v-if="isLogin">xat-gym</h1>
-          <h1 v-else>Please sign in</h1>
-          <a v-if="isLogin" href="#" id="menu-toggle" @click="openMenu($event)">Toggle Menu</a>
-
-          <router-view></router-view>
-          <div v-if="animation_status" class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-              <div class="loader"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h1 v-if="isLogin">xat-gym</h1>
+            <h1 v-else>Please sign in</h1>
+            <a v-if="isLogin" href="#" id="menu-toggle" @click="openMenu($event)">Toggle Menu</a>
+            <router-view></router-view>
+            <div v-if="animation_status" class="row">
+              <div class="col-md-4"></div>
+              <div class="col-md-4">
+                <div class="loader"></div>
+              </div>
+              <div class="col-md-4"></div>
             </div>
-            <div class="col-md-4"></div>
           </div>
         </div>
       </div>
