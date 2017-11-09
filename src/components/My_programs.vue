@@ -10,7 +10,7 @@
             <a :href="program.SiteUrl" class="list-group-item">{{ program.Name }}</a>
           </td>
           <td>
-            <a v-if="delete_link_status" @click="deleteProgram($event, program.Url)" href="#">x</a>
+            <a v-if="delete_link_status" @click="deleteProgram($event, program.Url)" :disabled="true" href="#">x</a>
           </td>
         </tr>
       </tbody>

@@ -16,7 +16,7 @@
     </div>
     <div v-if="current_exercice_display" id="current_ex">
       <button @click="showAllEx()" v-if="show_all_ex_butt" :disabled="form_elements_disabled" class="btn btn-lg btn-block">Back to all exercises</button>
-      <h3>{{ current_exercice.name }}</h3>
+      <h3 id="program-name">{{ current_exercice.name }} <button id="finishExBtn" @click="finishExersise()" :disabled="form_elements_disabled" class="btn btn-lg">Finish</button></h3>
       <div>
         <h4>
           Repeats:
@@ -60,7 +60,8 @@
 
         times: '',
         weight: '',
-        count: 0
+        count: 0,
+        finishEx: false
       }
     },
 
@@ -91,10 +92,6 @@
               }
             }
 
-            if (newEx === false) {
-
-            }
-
             this.newTraining = newEx;
           })
           .catch(err => {
@@ -120,8 +117,18 @@
         this.current_exercice_display = false;
       },
 
+      finishExersise() {
+        this.finishEx = true;
+
+        var token = window.localStorage.getItem('token');
+        this.form_elements_disabled = true;
+
+        this.saveTraining();
+      },
+
       saveTraining() {
-        console.log(JSON.stringify(this.exercises));
+        //console.log(JSON.stringify(this.exercises));
+        this.form_elements_disabled = true;
 
         var token = window.localStorage.getItem('token');
         this.form_elements_disabled = true;
@@ -131,11 +138,25 @@
           Weight: this.weight
         });
 
-        this.axios.post('/updateTraining', {
-            Token: token,
-            URL: this.training_url,
-            Exercises: this.exercises
-          })
+        var training = {
+          Token: '',
+          URL: '',
+          Exercises: '',
+          Finish: ''
+        };
+
+        if (this.finishEx == true) {
+          training.Token = token;
+          training.Finish = true;
+          training.URL = this.training_url;
+        } else {
+          training.Token = token;
+          training.URL = this.training_url;
+          training.Exercises = this.exercises;
+          training.Finish = false;
+        }
+        
+        this.axios.post('/updateTraining', training)
           .then(response => {
             if (response.data.Status == false) {
               alert('Err 1: ' + response.data.Body.Msg);
@@ -146,6 +167,10 @@
               this.times = '';
               this.weight = '';
               this.form_elements_disabled = false;
+
+              if (this.finishEx == true) {
+                this.$router.push('/training/' + this.training_url);
+              }
             }
           }).catch(err => {
             alert('Err 2: ' + err);
@@ -169,6 +194,10 @@
   .weight-input {
     width: 50px;
     background-color: #ADD8E6
+  }
+
+  #program-name {
+    margin-top: 10px;
   }
 
 </style>

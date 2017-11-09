@@ -11,14 +11,6 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="#">Home
-                  <span class="sr-only">(current)</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                  <router-link v-if="isLogin" class="nav-link" id="to-home" to="/">Home</router-link>
-              </li>
               <li class="nav-item">
                   <a href="#" v-if="isLogin" @click="logOut" class="nav-link">Log out</a>
               </li>

@@ -6,8 +6,8 @@
         <label class="control-label col-sm-2">Program:</label>
         <div class="col-sm-10">
           <input :disabled="inp_program_name" v-model="program_name" type="text" class="form-control" id="Name">
+          <button :disabled="inp_add_new_exercise" class="new-ex btn-lg" @click="addNewExInput()" >+</button>
         </div>
-        <button :disabled="inp_add_new_exercise" class="new-ex btn-lg" @click="addNewExInput()" >+</button>
         <div v-for="e in exercises">
           <div class="add-new-ex">
             <input :disabled="inp_exercises_names" v-model="e.name" type="text">
