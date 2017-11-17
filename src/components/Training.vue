@@ -7,16 +7,22 @@
         </thead>
         <tbody>
           <tr v-for="ex in exercises">
-            <td>
-              <a @click="startEx($event, ex)" class="list-group-item" href="#">{{ ex.name }}</a>
+            <td v-if="ex.Finished">
+              <a @click="startEx($event, ex)" class="list-group-item ex-list finished-ex" href="#">{{ ex.name }}</a>
+            </td>
+            <td v-else>
+              <a @click="startEx($event, ex)" class="list-group-item ex-list" href="#">{{ ex.name }}</a>
             </td>
           </tr>
         </tbody>
       </table>
+      <button id="endTrainingBtn" @click="finishTraining()" :disabled="form_elements_disabled" class="btn btn-lg">Finish</button>
     </div>
     <div v-if="current_exercice_display" id="current_ex">
-      <button @click="showAllEx()" v-if="show_all_ex_butt" :disabled="form_elements_disabled" class="btn btn-lg btn-block">Back to all exercises</button>
-      <h3 id="program-name">{{ current_exercice.name }} <button id="finishExBtn" @click="finishExersise()" :disabled="form_elements_disabled" class="btn btn-lg">Finish</button></h3>
+      <button @click="showAllEx()" v-if="show_all_ex_butt" class="btn btn-lg btn-block">Back to all exercises</button>
+      <h3 id="program-name">{{ current_exercice.name }}</h3>
+      <button v-if="endEx == false" @click="finishEx()">Finish exercise</button>
+      <h3 v-else>Finished</h3>
       <div>
         <h4>
           Repeats:
@@ -61,44 +67,41 @@
         times: '',
         weight: '',
         count: 0,
-        finishEx: false
+        endTraining: false,
+        endEx: false
       }
     },
 
     async mounted() {
       this.$parent.animation_status = true;
-      this.getTraining();
+      await this.getTraining();
     },
 
     methods: {
       getTraining() {
-        this.axios.post('/training', {
-            Token: this.token,
-            URL: this.training_url
-          })
-          .then(result => {
-            this.$parent.animation_status = false;
+        return new Promise(done => {
+          this.axios.post('/training', {
+              Token: this.token,
+              URL: this.training_url
+            })
+            .then(result => {
+              this.$parent.animation_status = false;
 
-            this.training_name = result.data.Body.Result.ProgramName;
-            this.exercises = result.data.Body.Result.Exercises;
+              this.training_name = result.data.Body.Result.ProgramName;
+              this.exercises = result.data.Body.Result.Exercises;
 
-            //chek if training is new
-            var newEx = false;
-            for (var i = 0; i < this.exercises.length; i++) {
-              if (this.exercises[i].StartStatus == true) {
-                newEx = true;
+              this.endTraining = result.data.Body.Finished;
 
-                break;
-              }
-            }
+              return done();
+            })
+            .catch(err => {
+              this.$parent.animation_status = false;
 
-            this.newTraining = newEx;
-          })
-          .catch(err => {
-            this.$parent.animation_status = false;
+              console.log(err);
 
-            console.log(err);
-          })
+              return done();
+            })
+        })
       },
 
       startEx(event, ex) {
@@ -109,6 +112,8 @@
         this.display_trainings = false;
         this.current_exercice_display = true;
         this.show_all_ex_butt = true;
+
+        console.log('xxx: ' + JSON.stringify);
       },
 
       showAllEx() {
@@ -117,8 +122,8 @@
         this.current_exercice_display = false;
       },
 
-      finishExersise() {
-        this.finishEx = true;
+      finishTraining() {
+        this.endTraining = true;
 
         var token = window.localStorage.getItem('token');
         this.form_elements_disabled = true;
@@ -126,17 +131,25 @@
         this.saveTraining();
       },
 
+      finishEx() {
+        this.endEx = true;
+
+        this.saveTraining();
+      },
+
       saveTraining() {
-        //console.log(JSON.stringify(this.exercises));
+        if ((this.times == '' || this.weight == '') && this.endEx == false) {
+          alert('Times and weight cannot be empty');
+
+          return;
+        }
+
+        this.$parent.animation_status = true;
+
         this.form_elements_disabled = true;
 
         var token = window.localStorage.getItem('token');
         this.form_elements_disabled = true;
-
-        this.current_exercice.Repeats.push({
-          Times: this.times,
-          Weight: this.weight
-        });
 
         var training = {
           Token: '',
@@ -145,22 +158,33 @@
           Finish: ''
         };
 
-        if (this.finishEx == true) {
+        if (this.endTraining == true) {
           training.Token = token;
           training.Finish = true;
           training.URL = this.training_url;
         } else {
+          if (this.endEx == false) {
+            this.current_exercice.Repeats.push({
+              Times: this.times,
+              Weight: this.weight
+            });
+          }
+
+          this.current_exercice.Finished = this.endEx;
+
           training.Token = token;
           training.URL = this.training_url;
           training.Exercises = this.exercises;
           training.Finish = false;
         }
-        
+
         this.axios.post('/updateTraining', training)
-          .then(response => {
+          .then(async response => {
             if (response.data.Status == false) {
               alert('Err 1: ' + response.data.Body.Msg);
               this.form_elements_disabled = false;
+              this.endEx = false;
+              this.$parent.animation_status = false;
 
               return;
             } else {
@@ -168,8 +192,20 @@
               this.weight = '';
               this.form_elements_disabled = false;
 
-              if (this.finishEx == true) {
-                this.$router.push('/training/' + this.training_url);
+              await this.getTraining();
+
+              if (this.endEx == true) {
+                this.form_elements_disabled = true;
+                this.$parent.animation_status = false;
+
+                return;
+              }
+
+              if (this.endTraining == true) {
+                this.$router.push('/myTrainings');
+                this.$parent.animation_status = false;
+
+                return;
               }
             }
           }).catch(err => {
@@ -198,6 +234,11 @@
 
   #program-name {
     margin-top: 10px;
+  }
+
+  .finished-ex {
+    background-color: rgb(136, 206, 75);
+    color: black
   }
 
 </style>

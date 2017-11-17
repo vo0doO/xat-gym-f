@@ -8,13 +8,17 @@
         <tbody>
           <tr v-for="tr in trainings">
             <td>
-              <a :href="tr.SiteURL" class="list-group-item">{{ tr.ProgramName }}</a>
+              <a v-if="tr.Finished" :href="tr.SiteURL" class="list-group-item finished-training trainings-links">{{ tr.ProgramName }}</a>
+              <a v-else :href="tr.SiteURL" class="list-group-item trainings-links">{{ tr.ProgramName }}</a>
+            </td>
+            <td v-if="tr.Finished">
+              {{  getDate(tr.FinishDate) }}
+            </td>
+            <td v-else>
+              Not finished
             </td>
             <td>
-              {{ tr.StartStatus }}
-            </td>
-            <td>
-              <a @click="deleteTraining($event, tr.URL)" :href="tr.SiteURL">x</a>
+              <a v-if="deleteLink" @click="deleteTraining($event, tr.URL, confirm)" :href="tr.SiteURL">x</a>
             </td>
           </tr>
         </tbody>
@@ -29,7 +33,9 @@
     data() {
       return {
         token: window.localStorage.getItem('token'),
-        trainings: []
+        trainings: [],
+
+        deleteLink: true
       }
     },
 
@@ -61,9 +67,10 @@
           })
       },
 
-      deleteTraining(event, id) {
+      deleteTraining(event, id, confirm) {
         if (event) event.preventDefault();
 
+        this.deleteLink = false;
         this.$parent.animation_status = true;
 
         this.axios.post('/deleteTraining', {
@@ -71,15 +78,34 @@
             URL: id
           })
           .then(async result => {
-            this.$parent.animation_status = false;
-
             await this.getTrainings();
+
+            this.$parent.animation_status = false;
+            this.deleteLink = true;
           })
           .catch(err => {
             this.$parent.animation_status = false;
 
             console.log(err);
           })
+      },
+
+      getDate(time) {
+        var date = new Date(time);
+        
+        var day = date.getDate();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+
+        if (minutes.toString().length == 1) {
+          minutes = '0' + minutes;
+        }
+        
+        var dateStr = day + '/' + month + '/' + year + ' @ ' + hours + ':' + minutes;
+
+        return dateStr;
       }
     }
   }
@@ -87,6 +113,9 @@
 </script>
 
 <style>
-
+.finished-training {
+  background-color: rgb(136, 206, 75);
+  color: black
+}
 
 </style>

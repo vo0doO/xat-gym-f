@@ -82,7 +82,7 @@
         //add false status to each exercise
 
         for (var i = 0; i < this.selected_program.Exercises.length; i++) {
-          this.selected_program.Exercises[i].StartStatus = false;
+          this.selected_program.Exercises[i].Finished = false;
           this.selected_program.Exercises[i].Repeats = [];
         }
 
