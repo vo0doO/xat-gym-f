@@ -16,7 +16,7 @@
           </tr>
         </tbody>
       </table>
-      <button id="endTrainingBtn" @click="finishTraining()" :disabled="form_elements_disabled" class="btn btn-lg">Finish</button>
+      <button id="endTrainingBtn" @click="finishTraining()" :disabled="finish_training_button" class="btn btn-lg">Finish</button>
     </div>
     <div v-if="current_exercice_display" id="current_ex">
       <button @click="showAllEx()" v-if="show_all_ex_butt" class="btn btn-lg btn-block">Back to all exercises</button>
@@ -28,11 +28,11 @@
           Repeats:
         </h4>
         <span v-for="(rep, index) in current_exercice.Repeats">
-          <span class="repeats">
+          <div class="repeats">
             {{ index + 1 }}
             <input :disabled="form_elements_disabled" type="text" :value="rep.Times" class="times-input"> /
             <input :disabled="form_elements_disabled" type="text" :value="rep.Weight" class="weight-input">
-          </span>
+          </div>
         </span>
         <div id="add-repeat">
           <span>
@@ -63,6 +63,7 @@
         current_exercice: null,
         current_exercice_display: false,
         form_elements_disabled: false,
+        finish_training_button: false,
 
         times: '',
         weight: '',
@@ -90,7 +91,12 @@
               this.training_name = result.data.Body.Result.ProgramName;
               this.exercises = result.data.Body.Result.Exercises;
 
-              this.endTraining = result.data.Body.Finished;
+              this.endTraining = result.data.Body.Result.Finished;
+
+              if (this.endTraining == true) {
+                this.form_elements_disabled = true;
+                this.finish_training_button = true;
+              }
 
               return done();
             })
@@ -107,13 +113,20 @@
       startEx(event, ex) {
         if (event) event.preventDefault();
 
+        console.log('this.endTraining: ' + this.endTraining);
+        if (ex.Finished == true || this.endTraining == true) {
+          this.endEx = true;
+          this.form_elements_disabled = true;
+        } else {
+          this.endEx = false;
+          this.form_elements_disabled = false;
+        }
+
         this.current_exercice = ex;
 
         this.display_trainings = false;
         this.current_exercice_display = true;
         this.show_all_ex_butt = true;
-
-        console.log('xxx: ' + JSON.stringify);
       },
 
       showAllEx() {
@@ -127,6 +140,7 @@
 
         var token = window.localStorage.getItem('token');
         this.form_elements_disabled = true;
+        this.finish_training_button = true;
 
         this.saveTraining();
       },
@@ -134,11 +148,13 @@
       finishEx() {
         this.endEx = true;
 
+
+
         this.saveTraining();
       },
 
       saveTraining() {
-        if ((this.times == '' || this.weight == '') && this.endEx == false) {
+        if ((this.times == '' || this.weight == '') && this.endEx == false && this.endTraining == false) {
           alert('Times and weight cannot be empty');
 
           return;
@@ -158,24 +174,19 @@
           Finish: ''
         };
 
-        if (this.endTraining == true) {
-          training.Token = token;
-          training.Finish = true;
-          training.URL = this.training_url;
-        } else {
-          if (this.endEx == false) {
-            this.current_exercice.Repeats.push({
-              Times: this.times,
-              Weight: this.weight
-            });
-          }
+        training.Token = token;
+        training.Finish = this.endTraining;
+        training.URL = this.training_url;
 
-          this.current_exercice.Finished = this.endEx;
+        this.current_exercice.Finished = this.endEx;
 
-          training.Token = token;
-          training.URL = this.training_url;
-          training.Exercises = this.exercises;
-          training.Finish = false;
+        training.Exercises = this.exercises;
+
+        if (this.endTraining == false || this.endEx == false) {
+          this.current_exercice.Repeats.push({
+            Times: this.times,
+            Weight: this.weight
+          });
         }
 
         this.axios.post('/updateTraining', training)

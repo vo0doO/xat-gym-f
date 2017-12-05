@@ -85,7 +85,7 @@
           this.selected_program.Exercises[i].Finished = false;
           this.selected_program.Exercises[i].Repeats = [];
         }
-
+    
         this.axios.post('/addTraining', {
             Token: token,
             Training: this.selected_program,
